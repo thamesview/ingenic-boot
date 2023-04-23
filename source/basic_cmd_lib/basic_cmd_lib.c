@@ -26,6 +26,7 @@ static const struct vid_pid ingenic_vid_pid[] = {
 	{.vid = 0x601a, .pid = 0x4750,},
 	{.vid = 0x601a, .pid = 0x4760,},
 	{.vid = 0xa108, .pid = 0x4770,},
+	{.vid = 0xa108, .pid = 0xc309,},
 	{ },
 };
 
@@ -191,8 +192,14 @@ int usb_get_ingenic_cpu(struct ingenic_dev *ingenic_dev)
 	}
 
 	cpu_info_buff[8] = '\0';
-	printf(" CPU data: %s\n", cpu_info_buff);
+	printf(" CPU data: ´%s´\n", cpu_info_buff);
 
+    if (!strcmp(cpu_info_buff,"T 3 1 V ")) {
+		ingenic_dev->cpu_id = 0x4740;
+		ingenic_dev->boot_stage = UNBOOT;
+		printf("It´s a T31V\n");
+		return 0;
+	} 
 	if (!strcmp(cpu_info_buff,"JZ4740V1")) {
 		ingenic_dev->cpu_id = 0x4740;
 		ingenic_dev->boot_stage = UNBOOT;
